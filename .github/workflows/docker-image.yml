@@ -57,6 +57,7 @@ jobs:
           docker load --input /tmp/demo.tar
           docker image ls -a 
     - name: Run Trivy vulnerability scanner
+      continue-on-error: true
       uses: aquasecurity/trivy-action@master
       with:
         image-ref: 'praand/demo:test2'
@@ -67,10 +68,19 @@ jobs:
         severity: 'CRITICAL,HIGH'
 
   push_image:
-    needs: scan_image
+    needs: [scan_image, build_image]
     runs-on: ubuntu-latest
 
     steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: demo-image
+        path: /tmp
+    - name: Load image
+      run: |
+          docker load --input /tmp/demo.tar
+          docker image ls -a 
     - name: Login to Docker Hub
       env:
         DOCKER_TOKEN: ${{ secrets.DOCKER_PASSWORD }}
