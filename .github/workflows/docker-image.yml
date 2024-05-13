@@ -24,4 +24,7 @@ jobs:
       run: |
         GIT_SHA="$(git rev-parse --short HEAD)"
         docker tag praand/demo:latest praand/demo:$GIT_SHA
-        
+    - name: Push the Docker images
+      run: |
+        docker push praand/demo:$GIT_SHA
+        docker push  praand/demo:latest
