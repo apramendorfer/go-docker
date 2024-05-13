@@ -30,7 +30,7 @@ jobs:
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
-        
+
     - name: Tag and push the Docker images
       run: |
         GIT_SHA="$(git rev-parse --short HEAD)"
@@ -38,4 +38,17 @@ jobs:
         docker push praand/demo:$GIT_SHA
         docker push  praand/demo:latest
 
-     
+  sonarCloud:
+    name: SonarCloud Code Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+      
+      - uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
