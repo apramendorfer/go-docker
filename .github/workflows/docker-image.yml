@@ -59,7 +59,7 @@ jobs:
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: '$IMAGE_NAME:test2'
+        image-ref: 'praand/demo:test2'
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
