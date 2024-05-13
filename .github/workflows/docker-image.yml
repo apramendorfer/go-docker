@@ -20,10 +20,22 @@ jobs:
       run: echo "$DOCKER_TOKEN" | docker login -u praand --password-stdin
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag praand/demo:latest
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'praand/demo:latest'
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
+        
     - name: Tag and push the Docker images
       run: |
         GIT_SHA="$(git rev-parse --short HEAD)"
         docker tag praand/demo:latest praand/demo:$GIT_SHA
         docker push praand/demo:$GIT_SHA
         docker push  praand/demo:latest
+
      
