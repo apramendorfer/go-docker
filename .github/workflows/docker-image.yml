@@ -29,7 +29,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag praand/demo:latest
+      run: |
+       docker build . --file Dockerfile --tag praand/demo:latest
+       docker save praand/demo:latest > demo.tar
+    - name: Upload frontend image as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: demo-image
+        path: demo.tar
 
   scan_image:
     needs: build_image
