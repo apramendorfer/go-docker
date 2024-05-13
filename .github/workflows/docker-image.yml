@@ -21,7 +21,7 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag praand/demo:latest
     - name: Tag the Docker image
-      run: .
+      run: |
         GIT_SHA="$(git rev-parse --short HEAD)"
-        docker tag $DOCKER_USERNAME/demo:latest $DOCKER_USERNAME/demo:$GIT_SHA
+        docker tag praand/demo:latest praand/demo:$GIT_SHA
         
