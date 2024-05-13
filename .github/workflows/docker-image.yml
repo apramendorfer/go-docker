@@ -29,7 +29,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag praand/demo:test
+      run: docker build . --file Dockerfile --tag praand/demo:latest
 
   scan_image:
     needs: build_image
@@ -40,7 +40,7 @@ jobs:
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: 'praand/demo:test'
+        image-ref: 'praand/demo:latest'
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
@@ -59,9 +59,9 @@ jobs:
     - name: Tag and push the Docker images
       run: |
         GIT_SHA="$(git rev-parse --short HEAD)"
-        docker tag praand/demo:test praand/demo:$GIT_SHA
+        docker tag praand/demo:latest praand/demo:$GIT_SHA
         docker push praand/demo:$GIT_SHA
-        docker push  praand/demo:test
+        docker push  praand/demo:latest
 
   sonarCloud:
     name: SonarCloud Code Analysis
