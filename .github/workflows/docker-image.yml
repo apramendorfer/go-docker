@@ -31,7 +31,7 @@ jobs:
     - name: Build the Docker image
       run: |
        docker build . --file Dockerfile --tag praand/demo:latest
-       docker save praand/demo:latest > tmp/demo.tar
+       docker save praand/demo:latest > /tmp/demo.tar
     - name: Upload image as artifact
       uses: actions/upload-artifact@v2
       with:
