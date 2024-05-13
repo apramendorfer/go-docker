@@ -32,11 +32,11 @@ jobs:
       run: |
        docker build . --file Dockerfile --tag praand/demo:latest
        docker save praand/demo:latest > demo.tar
-    - name: Upload frontend image as artifact
+    - name: Upload image as artifact
       uses: actions/upload-artifact@v2
       with:
         name: demo-image
-        path: demo.tar
+        path: /tmp/demo.tar
 
   scan_image:
     needs: build_image
@@ -44,6 +44,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: demo-image
+        path: /tmp
+    - name: Load image
+      run: |
+          docker load --input /tmp/demo.tar
+          docker image ls -a 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
